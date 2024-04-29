@@ -56,7 +56,7 @@ const AirportTable = ({ updateMap }) => {
 
   const handleSearchChange = (event) => {
     setSearchKeyword(event.target.value.toLowerCase());
-    setPage(0); // Reset pagination when search keyword changes
+    setPage(0);
   };
 
   const filteredRows = rows.filter((row) =>

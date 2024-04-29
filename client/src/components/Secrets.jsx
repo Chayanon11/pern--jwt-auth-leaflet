@@ -1,10 +1,9 @@
 import { useState } from "react";
 import Navbar from "./Navbar";
 import Logout from "./Logout";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import AirportTable from "./AirportTable";
 import "leaflet/dist/leaflet.css";
-import { Button } from "@mui/material";
 
 const Secrets = () => {
   const [map, setMap] = useState(null);

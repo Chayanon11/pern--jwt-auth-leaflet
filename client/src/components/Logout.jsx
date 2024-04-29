@@ -7,7 +7,7 @@ const Logout = () => {
   const handleLogout = async () => {
     try {
       const response = await axios.get("/logout");
-      console.log(response.data.message); // Log the success message
+      console.log(response.data.message);
       window.location.href = "/login";
     } catch (error) {
       if (error.response && error.response.status === 401) {
