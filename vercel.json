@@ -10,7 +10,7 @@
       }
     },
     {
-      "src": "/server/server.js",
+      "src": "server/server.js",
       "use": "@vercel/node"
     }
   ],
@@ -21,7 +21,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "client/$1"
+      "dest": "/client/dist/$1"
     }
   ]
 }
