@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { BsGlobe2 } from "react-icons/bs";
 
 const Navbar = () => {
   return (
@@ -7,13 +8,11 @@ const Navbar = () => {
         <Link
           to="/"
           className="flex items-center space-x-3 rtl:space-x-reverse">
-          <img
-            src="https://scontent.fbkk29-6.fna.fbcdn.net/v/t39.30808-6/432767462_921528876644243_8665177821304636886_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeHUZeHHDVsWa_P97gzJ5kbhI6uGiKnMDuMjq4aIqcwO43PeJpIAszXntQl_WTJtwn77YFzofk1AFa_WxYFiEch8&_nc_ohc=LAFlylYxhbIQ7kNvgGzmCvz&_nc_ht=scontent.fbkk29-6.fna&oh=00_AfC52RLL72h6VNQ594onfZ6NaM9q-J3-Is8anEWRSXImXg&oe=6632376D"
-            className="h-8"
-            alt="Company Logo"
-          />
+          <div>
+            <BsGlobe2 size="2em" color="white" />
+          </div>
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-            TDM
+            FindMap
           </span>
         </Link>
         <button
