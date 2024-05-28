@@ -17,9 +17,11 @@ const AirportTable = ({ updateMap }) => {
   const [searchKeyword, setSearchKeyword] = useState("");
 
   useEffect(() => {
-    axios.get(`${import.meta.env.SERVER_URL}/points`).then((response) => {
-      setRows(response.data);
-    });
+    axios
+      .get(`https://pern-passport-auth-leaflet-r13o.vercel.app/points`)
+      .then((response) => {
+        setRows(response.data);
+      });
   }, []);
 
   const columns = [

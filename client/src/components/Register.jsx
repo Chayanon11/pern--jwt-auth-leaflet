@@ -9,11 +9,12 @@ const Register = () => {
   const [alertMessage, setAlertMessage] = useState("");
 
   const handleSubmit = async (event) => {
+    s;
     event.preventDefault();
 
     try {
       const response = await axios.post(
-        `${import.meta.env.SERVER_URL}/register`,
+        `https://pern-passport-auth-leaflet-r13o.vercel.app/register`,
         {
           username: username,
           password: password,

@@ -6,7 +6,9 @@ const Logout = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.get("/logout");
+      const response = await axios.get(
+        `https://pern-passport-auth-leaflet-r13o.vercel.app/logout`
+      );
       console.log(response.data.message);
       window.location.href = "/login";
     } catch (error) {

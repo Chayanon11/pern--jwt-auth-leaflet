@@ -11,10 +11,13 @@ const Login = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post(`${import.meta.env.SERVER_URL}/login`, {
-        username: username,
-        password: password,
-      });
+      const response = await axios.post(
+        `https://pern-passport-auth-leaflet-r13o.vercel.app/login`,
+        {
+          username: username,
+          password: password,
+        }
+      );
 
       console.log(response.data);
       setUsername("");
