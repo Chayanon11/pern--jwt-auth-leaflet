@@ -1,21 +1,17 @@
 import express from "express";
 import bodyParser from "body-parser";
+import pg from "pg";
 import bcrypt from "bcrypt";
 import passport from "passport";
 import { Strategy } from "passport-local";
 import session from "express-session";
 import env from "dotenv";
 import cors from "cors";
-import { createClient } from "@supabase/supabase-js";
 
 const app = express();
 const port = 3000;
 const saltRounds = 10;
 env.config();
-
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -38,6 +34,18 @@ app.use(
   })
 );
 
+const db = new pg.Client({
+  user: process.env.PG_USER,
+  host: process.env.PG_HOST,
+  database: process.env.PG_DATABASE,
+  password: process.env.PG_PASSWORD,
+  port: process.env.PG_PORT,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
+db.connect();
+
 app.get("/", (req, res) => {
   res.send("Welcome to the authentication system!");
 });
@@ -51,16 +59,16 @@ app.post(
 );
 
 app.post("/register", async (req, res) => {
-  const { username, password } = req.body;
+  const username = req.body.username;
+  const password = req.body.password;
 
   try {
-    const { data: existingUser, error: checkError } = await supabase
-      .from("users")
-      .select("*")
-      .eq("username", username)
-      .single();
+    const checkResult = await db.query(
+      "SELECT * FROM users WHERE username = $1",
+      [username]
+    );
 
-    if (existingUser) {
+    if (checkResult.rows.length > 0) {
       return res.status(400).json({ error: "User already exists" });
     }
 
@@ -70,16 +78,12 @@ app.post("/register", async (req, res) => {
         return res.status(500).json({ error: "Internal server error" });
       }
 
-      const { data, error } = await supabase
-        .from("users")
-        .insert([{ username, password: hash }])
-        .single();
+      const result = await db.query(
+        "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *",
+        [username, hash]
+      );
 
-      if (error) {
-        console.error("Error inserting user:", error);
-        return res.status(500).json({ error: "Internal server error" });
-      }
-
+      const user = result.rows[0];
       return res.status(200).json({ message: "User registered successfully" });
     });
   } catch (err) {
@@ -95,14 +99,8 @@ app.get("/logout", (req, res) => {
 
 app.get("/points", async (req, res) => {
   try {
-    const { data, error } = await supabase.from("points").select("*");
-
-    if (error) {
-      console.error("Error fetching points:", error);
-      return res.status(500).json({ error: "Internal server error" });
-    }
-
-    res.status(200).json(data);
+    const result = await db.query("SELECT * FROM points");
+    res.status(200).json(result.rows);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });
@@ -112,28 +110,30 @@ app.get("/points", async (req, res) => {
 passport.use(
   new Strategy(async function verify(username, password, cb) {
     try {
-      const { data: user, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("username", username)
-        .single();
+      const result = await db.query(
+        "SELECT * FROM users WHERE username = $1 ",
+        [username]
+      );
 
-      if (error || !user) {
+      if (result.rows.length > 0) {
+        const user = result.rows[0];
+        const storedHashedPassword = user.password;
+
+        bcrypt.compare(password, storedHashedPassword, (err, valid) => {
+          if (err) {
+            console.error("Error comparing passwords:", err);
+            return cb(err);
+          }
+
+          if (valid) {
+            return cb(null, user);
+          } else {
+            return cb(null, false);
+          }
+        });
+      } else {
         return cb(null, false);
       }
-
-      bcrypt.compare(password, user.password, (err, valid) => {
-        if (err) {
-          console.error("Error comparing passwords:", err);
-          return cb(err);
-        }
-
-        if (valid) {
-          return cb(null, user);
-        } else {
-          return cb(null, false);
-        }
-      });
     } catch (err) {
       console.error(err);
       return cb(err);
