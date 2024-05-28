@@ -17,7 +17,7 @@ const AirportTable = ({ updateMap }) => {
   const [searchKeyword, setSearchKeyword] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/points").then((response) => {
+    axios.get(`${import.meta.env.SERVER_URL}/points`).then((response) => {
       setRows(response.data);
     });
   }, []);

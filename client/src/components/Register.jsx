@@ -12,10 +12,13 @@ const Register = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3001/register", {
-        username: username,
-        password: password,
-      });
+      const response = await axios.post(
+        `${import.meta.env.SERVER_URL}/register`,
+        {
+          username: username,
+          password: password,
+        }
+      );
 
       setUsername("");
       setPassword("");

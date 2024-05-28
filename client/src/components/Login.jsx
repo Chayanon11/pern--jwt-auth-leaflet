@@ -11,7 +11,7 @@ const Login = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3001/login", {
+      const response = await axios.post(`${import.meta.env.SERVER_URL}/login`, {
         username: username,
         password: password,
       });
