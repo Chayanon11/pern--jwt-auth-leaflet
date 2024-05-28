@@ -9,7 +9,6 @@ const Register = () => {
   const [alertMessage, setAlertMessage] = useState("");
 
   const handleSubmit = async (event) => {
-    s;
     event.preventDefault();
 
     try {
