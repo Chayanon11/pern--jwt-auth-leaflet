@@ -9,7 +9,7 @@ import env from "dotenv";
 import cors from "cors";
 
 const app = express();
-const port = 3001;
+const port = 3000;
 const saltRounds = 10;
 env.config();
 
